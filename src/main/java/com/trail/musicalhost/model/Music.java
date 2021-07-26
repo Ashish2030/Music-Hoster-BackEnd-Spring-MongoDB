@@ -2,12 +2,17 @@ package com.trail.musicalhost.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "musicfile")
 public class Music {
+
+
+    @Transient
+    private static final String SEQUENCE_NAME="user_sequence";
     @Id
-    private String musicId;
+    private int musicId;
     private String name;
     private String description;
     private String type;
@@ -34,10 +39,10 @@ public class Music {
     }
 
     private byte[] data;
-    public String getMusicId() {
+    public int getMusicId() {
         return musicId;
     }
-    public void setMusicId(String musicId) {
+    public void setMusicId(int musicId) {
         this.musicId = musicId;
     }
     public byte[] getData() {

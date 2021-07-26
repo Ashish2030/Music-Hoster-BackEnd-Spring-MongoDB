@@ -10,11 +10,16 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import static com.trail.musicalhost.model.User.SEQUENCE_NAME;
+
 @Service
 public class  UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private SequenceGeneratorService service;
 
     public User getCurrentLoggedINUser() {
         String username;
@@ -35,6 +40,7 @@ public class  UserService {
         return user.isPresent();
     }
     public void save(User user){
+        user.setId(service.getSequenceNumber(SEQUENCE_NAME));
         this.userRepository.save(user);
     }
 }

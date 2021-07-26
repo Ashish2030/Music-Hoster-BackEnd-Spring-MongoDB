@@ -25,7 +25,7 @@ public class MusicController {
 
     //-------------------delete by music Id
     @DeleteMapping("/delete/{id}")
-    public String deletePost(@PathVariable String id)
+    public String deletePost(@PathVariable int id)
     {
            this.musicService.deleteMusic(id);
         String response = "{\"success\" : true, \"message\" : \"Post Deleted Successfully\"}";
@@ -39,7 +39,7 @@ public class MusicController {
     }
 // get data by music Id
     @RequestMapping("/getpostbyid/{id}")
-    public Music getPost(@PathVariable String id)
+    public Music getPost(@PathVariable int id)
     {
         return this.musicService.getMusic(id);
     }
@@ -49,7 +49,7 @@ public class MusicController {
             String fileDownloadUri = ServletUriComponentsBuilder
                     .fromCurrentContextPath()
                     .path("/files/")
-                    .path(dbFile.getMusicId())
+                    .path(String.valueOf(dbFile.getMusicId()))
                     .toUriString();
             return new ResponseFile(
                     dbFile.getName(),
@@ -85,7 +85,7 @@ public class MusicController {
     }
     //--------------------getBymusicid
     @GetMapping("/files/{id}")
-    public ResponseEntity<byte[]> getFile(@PathVariable String  id) {
+    public ResponseEntity<byte[]> getFile(@PathVariable int  id) {
         Music fileDB = musicService.getFile(id);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileDB.getName() + "\"")
@@ -95,7 +95,7 @@ public class MusicController {
 
 //---------------------Change music file
     @RequestMapping(method = RequestMethod.PUT, value = "/post/update/{id}")
-    public String updatePost(@PathVariable String id, @RequestParam("file") MultipartFile file)
+    public String updatePost(@PathVariable int id, @RequestParam("file") MultipartFile file)
     {
         String response ="";
         try {

@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
 
-public interface MusicRepository extends MongoRepository<Music,String> {
+public interface MusicRepository extends MongoRepository<Music,Integer> {
 
     @Query("select p from Music p where p.user.id=:id")
     List<Music> findAllMusicByUserId(Integer id);

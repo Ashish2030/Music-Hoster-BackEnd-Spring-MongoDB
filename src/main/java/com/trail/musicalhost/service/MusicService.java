@@ -13,8 +13,14 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
+
+import static com.trail.musicalhost.model.User.SEQUENCE_NAME;
+
 @Service
 public class MusicService {
+
+    @Autowired
+    private SequenceGeneratorService service;
     @Autowired
     public MusicRepository musicRepository;
     @Autowired
@@ -31,13 +37,14 @@ public class MusicService {
         FileDB.setUser(user);
         FileDB.setDescription(details.getDescription());
         FileDB.setTag(details.getName());
+        FileDB.setMusicId(service.getSequenceNumber(SEQUENCE_NAME));
         musicRepository.save(FileDB);
         userRepository.delete(user);
         user.getMusic().add(FileDB);
         userRepository.save(user);
     }
 
-    public Music getFile(String id) {
+    public Music getFile(int id) {
         return musicRepository.findById(id).get();
     }
     public Stream<Music> getAllFiles() {
@@ -48,7 +55,7 @@ public class MusicService {
         return (List<Music>) musicRepository.findAll();
     }
 
-    public Music getMusic(String id){
+    public Music getMusic(int id){
         Optional<Music> music = musicRepository.findById(id);
         if(music.isPresent())
         {
@@ -63,14 +70,14 @@ public class MusicService {
     public List<Music> getPostByUserID(Integer id){
         return this.musicRepository.findAllMusicByUserId(id);
     }
-    public void deleteMusic(String  id){
+    public void deleteMusic(int   id){
         this.musicRepository.deleteById(id);
     }
     // Method to add a post
     public void addMusic(Music music){
         this.musicRepository.save(music);
     }
-    public boolean updateMusic(String id,  MultipartFile file)throws IOException
+    public boolean updateMusic(int id,  MultipartFile file)throws IOException
     {
         User user = userService.getCurrentLoggedINUser();
 
@@ -83,7 +90,6 @@ public class MusicService {
             Music FileDB = new Music(fileName, file.getContentType(), file.getBytes());
 
             FileDB.setMusicId(music1.getMusicId());
-
             FileDB.setUser(user);
              musicRepository.save(FileDB);
             return true;

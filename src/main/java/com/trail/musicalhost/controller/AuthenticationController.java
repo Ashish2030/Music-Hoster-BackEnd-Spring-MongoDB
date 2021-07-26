@@ -3,6 +3,7 @@ package com.trail.musicalhost.controller;
 import com.trail.musicalhost.model.*;
 import com.trail.musicalhost.service.JwtUtil;
 import com.trail.musicalhost.repository.UserProfile123;
+import com.trail.musicalhost.service.SequenceGeneratorService;
 import com.trail.musicalhost.service.UserDetailsServiceImpl;
 import com.trail.musicalhost.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +14,15 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import static com.trail.musicalhost.model.User.SEQUENCE_NAME;
+
 @CrossOrigin(origins="http://localhost:3000")
 @RestController
 public class AuthenticationController {
+
+    @Autowired
+    private SequenceGeneratorService service;
     @Autowired
     UserProfile123 UserProfile;
 
@@ -70,7 +77,7 @@ public class AuthenticationController {
         userProfile.setMobile(newUser.getMobile());
         userProfile.setPassword(newUser.getPassword());
         user.setProfile(userProfile);
-
+        userProfile.setId(service.getSequenceNumber(SEQUENCE_NAME));
         this.UserProfile.save(userProfile);
         userService.save(user);
         return new ResponseEntity<>("User Created",HttpStatus.CREATED);
